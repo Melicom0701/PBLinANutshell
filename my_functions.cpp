@@ -31,13 +31,13 @@ int count_connected_components(int n,int graph[NMAX][NMAX]) {
 
     return cnt;
 }
-
+//more input options pleaseee
 void input(int &n,int &m,int graph[][NMAX],int deg[]){
 
     freopen("graph.inp","r",stdin);
-    printf("Nhap so dinh ");
+    //printf("Nhap so dinh ");
     scanf("%d",&n);
-    printf("Nhap so canh ");
+    //printf("Nhap so canh ");
     scanf("%d",&m);
     int u,v,w;
     for(int i = 0; i < n; i++) {
@@ -86,40 +86,54 @@ void track(int u,int path[NMAX])
 
 }
 
-void dijkstra(int start,int destination,int n,int graph[NMAX][NMAX],int path[]) {
+void dijkstra(int start,int destination,int n,int G[NMAX][NMAX],int path[]) {
     int dist[NMAX];
     bool visited[NMAX];
-    //init
+    // Đường đi từ đỉnh i - > i = 0
+    // Không có đường đi thì G[i][j] = inf
     for(int i = 0; i < n; i++) {
     for(int j = 0; j < n; j++) {
-    if(i == j) graph[i][j] = 0;
-    else if (graph[i][j]==0) graph[i][j] = inf;
+    if(i == j) G[i][j] = 0;
+    else if (G[i][j]==0) G[i][j] = inf;
     }
     }
+    //đường đi từ đỉnh start -> tất cả các đỉnh bằng inf
+    //đường đi từ start -> start = 0
+
+
     for(int i = 0; i < n; i++) {
-        dist[i] = graph[start][i];
+        dist[i] = inf;
         visited[i] = false;
     }
     dist[start] = 0;
     visited[start] = true;
+
+
     for(int i = 1; i < n; i++) {
 
-        int min_dist = inf, u;
+        int min_dist = inf;
+        int u;
+        //dist[u] = min(dist[i]) i =(0,n)
+        // i is not Visited
+        // tìm đỉnh u sao cho đỉnh u chưa được ghé thăm, đường đi từ gốc đến đỉnh u bé nhất.
 
         for(int j = 0; j < n; j++) {
             if(!visited[j] && dist[j] < min_dist) {
                 min_dist = dist[j];
                 u = j;
-
             }
-
         }
         visited[u] = true;
+
+        //lấy u làm gốc.
+        //duyệt tất cả đỉnh trong N
+        //nếu đỉnh V chưa ghé thăm và đường đi từ gốc - v (dist[u]+G[u][v]) ngắn hơn thì cải tiến
         for(int v = 0; v < n; v++) {
-            if(!visited[v] && graph[u][v] < inf) {
-                int new_dist = dist[u] + graph[u][v];
+            if(!visited[v] && G[u][v] < inf) {
+                int new_dist = dist[u] + G[u][v];
                 if(new_dist < dist[v]) {
                     dist[v] = new_dist;
+                    // Lưu lại đỉnh kề trước nó để lát track lại đường đi
                     path[v] = u;
                 }
             }
@@ -169,9 +183,9 @@ int minKey(int n,int key[], bool mstSet[]) {
      }
 
 void primMST(int n,int graph[NMAX][NMAX]) {
-       int parent[n]; // Lưu đỉnh cha của đỉnh V trong cây bao trùm nhỏ nhất
+       int parent[n];
        int key[n];
-       bool mstSet[n];  // Đánh dấu các đỉnh đã được thêm vào tập các đỉnh đã xét
+       bool mstSet[n];
 
    for (int i = 0; i < n; i++)
       key[i] = inf, mstSet[i] = false;
