@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1683284191 source:/home/melicom/CP/PBLinANutShell/input.cpp
+	<bits/stdc++.h>
+
+1683334717 source:/home/melicom/CP/PBLinANutShell/main.cpp
+	<iostream>
+	"my_functions.h"
+
+1683334621 /home/melicom/CP/PBLinANutShell/my_functions.h
+
+1683334631 source:/home/melicom/CP/PBLinANutShell/my_functions.cpp
+	<iostream>
+	"my_functions.h"
+
