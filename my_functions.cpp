@@ -2,6 +2,7 @@
 #include "my_functions.h"
 #include <ctime>
 #include <fstream>
+#include <stack>
 
 bool visited[NMAX];
 void dfs(int u,int n,int graph[NMAX][NMAX]){
@@ -13,6 +14,38 @@ void dfs(int u,int n,int graph[NMAX][NMAX]){
         dfs(i,n,graph);
     }
     return;
+}
+void findEulerCycle(int n,int graph[NMAX][NMAX])
+{
+    stack<int> p;
+    p.push(1);
+    int path[NMAX];
+    int k = 0;
+    int u = 1;
+    while (!p.empty()){
+    u = p.top();
+    bool flag = false;
+    for (int i = 1;i<=n;i++){
+        if (i==u) continue;
+        else
+        if (graph[i][u]!=inf)
+        {
+            flag = true;
+            p.push(i);
+            graph[i][u] = inf;
+            graph[u][i] = inf;
+            break;
+            }
+    }
+    if (flag == false)
+    {   k++;
+        path[k] = p.top();
+        p.pop();
+    }
+    }
+    for (int i = 1;i<=k;i++)
+        printf("%d ",path[i]);
+    printf("\n");
 }
 int count_connected_components(int n,int graph[NMAX][NMAX]) {
     int cnt = 0;
@@ -67,7 +100,7 @@ void  adjacence_list(int &n,int &m,int graph[][NMAX],int deg[]){
 
         }
         fclose(file);
-
+        printf("Da nhap xong du lieu tu file !\n");
 
 
 
@@ -131,6 +164,7 @@ void generateInput(int &n,int &m,int graph[][NMAX],int deg[]){
         graph[v][u] = w;
 
     }
+    printf("Da phat sinh xong do thi trong so !\n");
 
 }
 
@@ -208,9 +242,7 @@ void dijkstra(int start,int destination,int n,int G[NMAX][NMAX],int path[]) {
     }
     dist[start] = 0;
     //Duyet dinh cuoi cung ko duyet nua,
-
     for(int i = 1; i < n; i++) {
-
         int min_dist = inf;
         int u;
         //dist[u] = min(dist[i]) i =(0,n)
@@ -224,10 +256,7 @@ void dijkstra(int start,int destination,int n,int G[NMAX][NMAX],int path[]) {
             }
 
         }
-
         visited[u] = true;
-
-
         //lấy u làm gốc.
         //duyệt tất cả đỉnh trong N
         //nếu đỉnh V chưa ghé thăm và đường đi từ gốc - v (dist[u]+G[u][v]) ngắn hơn thì cải tiến
@@ -242,7 +271,6 @@ void dijkstra(int start,int destination,int n,int G[NMAX][NMAX],int path[]) {
             }
         }
     }
-
     if (dist[destination]==inf)
     printf("Khong co duong di tu dinh %d den dinh %d",start,destination);
     else
@@ -253,8 +281,6 @@ void dijkstra(int start,int destination,int n,int G[NMAX][NMAX],int path[]) {
     track(destination,path);
     }
     printf("\n");
-
-
 }
 
 bool check_euler_graph(int n, int graph[NMAX][NMAX],int deg[])
@@ -284,7 +310,7 @@ int minKey(int n,int key[], bool mstSet[]) {
              min = key[v], min_index = v;
 
         return min_index;
-     }
+}
 
 void primMST(int n,int graph[NMAX][NMAX]) {
        int parent[n];
@@ -313,8 +339,12 @@ void primMST(int n,int graph[NMAX][NMAX]) {
  void isEulerHandling(int n,int graph[NMAX][NMAX],int deg[NMAX])
  {
      bool isEulerGraph = check_euler_graph(n,graph,deg);
-     if (isEulerGraph==true)
+     if (isEulerGraph==true){
         printf("Do thi tren co chu trinh Euler\n");
+        findEulerCycle(n,graph);
+        printf("Nhap lai do thi ");
+    }
+
      else printf("Do thi tren khong co chu trinh Euler\n");
      return;
  }
@@ -343,7 +373,7 @@ void printfHandling(int n,int graph[NMAX][NMAX])
 {
     output(n,graph);
 }
-void functions(int n,int m,int graph[][NMAX],int deg[],int path[])
+void functions(int n,int m,int graph[NMAX][NMAX],int deg[],int path[])
 {
     int opt = -1;
     while (opt!=0)
@@ -374,14 +404,7 @@ void functions(int n,int m,int graph[][NMAX],int deg[],int path[])
             break;
             default : opt = 0;
 
-
         }
-
-
-
-
-
-
     }
 
 

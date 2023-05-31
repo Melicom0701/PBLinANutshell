@@ -10,6 +10,7 @@ void print_path(int u,int path[NMAX]);
 bool check_euler_graph(int n, int graph[NMAX][NMAX],int deg[]);
 void primMST(int n,int graph[NMAX][NMAX]);
 void functions(int n,int m,int graph[NMAX][NMAX],int deg[NMAX],int path[NMAX]);
-
+void printfHandling(int n,int graph[NMAX][NMAX]);
+void findEulerCycle(int n,int graph[NMAX][NMAX]);
 
 #endif
