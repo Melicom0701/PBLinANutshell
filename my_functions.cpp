@@ -173,6 +173,8 @@ void findEulerCycle(int n,int g[NMAX][NMAX])
         }
 
     }
+    getch();
+    closegraph();
 }
 int count_connected_components(int n,int graph[NMAX][NMAX]) {
     int cnt = 0;
@@ -193,6 +195,7 @@ int count_connected_components(int n,int graph[NMAX][NMAX]) {
 //more input options pleaseee
 
 void  adjacence_list(int &n,int &m,int graph[][NMAX],int deg[]){
+
     printf("-------------------------------------\n");
     printf("-    Nhap tu ban phim hoac file     -\n");
     printf("- 0 : nhap phim                     -\n");
@@ -248,7 +251,7 @@ void  adjacence_list(int &n,int &m,int graph[][NMAX],int deg[]){
     for (int i = 1 ;i<=m;i++)
     {
         scanf("%d %d %d",&u,&v,&w);
-        if (graph[u][v]==inf)
+        if (graph[u][v]==0)
         {
         deg[u]++;
         deg[v]++;
@@ -261,13 +264,13 @@ void  adjacence_list(int &n,int &m,int graph[][NMAX],int deg[]){
 
 
 }
-void generateInput(int &n,int &m,int graph[][NMAX],int deg[]){
-    srand(time(NULL));
+void generateInput(int &n,int &m,int graph[NMAX][NMAX],int deg[]){
+
+    //srand(static_cast<unsigned int>(std::time(nullptr)));
     //generate n (2-> 15 )
      n = 2 + (rand() % 13);
-
-    //generate m (2-> 200)
-     m = n-1 + (rand() % 198);
+    //generate m (n-1 -> 29)
+     m = n-1 + (rand() % 30);
     int u,v,w;
     for(int i = 1; i <= n; i++) {
     deg[i]=0;
@@ -275,13 +278,13 @@ void generateInput(int &n,int &m,int graph[][NMAX],int deg[]){
     for (int i = 1 ;i<=m;i++)
     {
         //scanf("%d %d %d",&u,&v,&w);
-        //generate u v w -> u != v thuoc ( 0 - > n - 1) , w thuoc ( 1-> 500)
-        u = 0 + rand()%(n);
-        while (u==v)
-        v = 0 + rand()%(n);
+        //generate u v w -> u != v thuoc ( 0 - > n - 1) , w thuoc ( 1-> 200)
+        u = 1 + rand()%(n);
+        v = 1 + rand()%(n);
+
         w = 1 + rand()%199;
-
-
+        while (u==v)
+            v = 1+rand()%(n);
         if (graph[u][v]==inf)
         {
         deg[u]++;
@@ -300,6 +303,7 @@ void input(int &n,int &m,int graph[][NMAX],int deg[]){
     int k =-1;
     for(int i = 1; i <= 20; i++) {
     for(int j = 1; j <= 20; j++) {
+    deg[i]=0;
     if(i == j) graph[i][j] = 0;
     else graph[i][j] = inf;
     }
