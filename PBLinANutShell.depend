@@ -16,12 +16,16 @@
 	<iostream>
 	"my_functions.h"
 
-1685345242 e:\pbl1\pblinanutshell\my_functions.h
+1685507204 e:\pbl1\pblinanutshell\my_functions.h
 
-1685347115 source:e:\pbl1\pblinanutshell\my_functions.cpp
+1685513010 source:e:\pbl1\pblinanutshell\my_functions.cpp
 	<iostream>
 	"my_functions.h"
 	<ctime>
 	<fstream>
 	<stack>
+	<graphics.h>
+	<string.h>
+	<math.h>
+	<cstdio>
 

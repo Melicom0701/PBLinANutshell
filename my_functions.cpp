@@ -3,8 +3,86 @@
 #include <ctime>
 #include <fstream>
 #include <stack>
+#include <graphics.h>
+#include <string.h>
+#include <math.h>
+#include <cstdio>
+
+using namespace std;
 
 bool visited[NMAX];
+char* toString(int n)
+{
+     char* buffer = new char[20];
+
+    sprintf(buffer, "%d", n);
+
+    return buffer;
+
+}
+void drawBoldText(int x, int y,  char* text, int thickness) {
+    settextstyle(DEFAULT_FONT, HORIZ_DIR, thickness);
+
+    // Draw text with slight offsets to create a bold effect
+    outtextxy(x, y, text);
+    outtextxy(x - 1, y, text);
+    outtextxy(x + 1, y, text);
+    outtextxy(x, y - 1, text);
+    outtextxy(x, y + 1, text);
+}
+void drawBoldCircle(int centerX, int centerY, int radius, int thickness) {
+    for (int i = radius; i <= radius + thickness; i++) {
+      //  setcolor(color + i - radius);
+        circle(centerX, centerY, i);
+    }
+}
+
+void drawGraph(int n,int graph[NMAX][NMAX])
+{
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+    int centerX = getmaxx() / 2;
+    int centerY = getmaxy() / 2;
+    int radius = 200;
+    int angle = 360 / n;
+    // Draw nodes
+     setcolor(LIGHTCYAN);
+    for (int i = 1; i <= n; i++) {
+        int x = centerX + radius * cos(angle * i * 3.14 / 180);
+        int y = centerY + radius * sin(angle * i * 3.14 / 180);
+        drawBoldCircle(x, y, 15,5);
+
+        drawBoldText(x-5,y-5,toString(i),30);
+    }
+    setcolor(WHITE);
+    // Draw edges
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (graph[i][j] != inf&& i!=j &&graph[i][j]!=0) {
+                int startX = centerX + radius * cos(angle * i * 3.14 / 180);
+                int startY = centerY + radius * sin(angle * i * 3.14 / 180);
+                int endX = centerX + radius * cos(angle * j * 3.14 / 180);
+                int endY = centerY + radius * sin(angle * j * 3.14 / 180);
+
+                line(startX, startY, endX, endY);
+
+                int weightX = (startX + endX) / 2;
+                int weightY = (startY + endY) / 2;
+                char* weightString = toString(graph[i][j]);
+                drawBoldText(weightX - 5, weightY - 5, weightString,30);
+            }
+        }
+    }
+
+    getch();
+    closegraph();
+
+
+}
+void printfHandling(int n,int graph[NMAX][NMAX])
+{
+    drawGraph(n,graph);
+}
 void dfs(int u,int n,int graph[NMAX][NMAX]){
     visited[u] = true;
     for (int i = 1 ;i<=n;i++)
@@ -15,8 +93,18 @@ void dfs(int u,int n,int graph[NMAX][NMAX]){
     }
     return;
 }
-void findEulerCycle(int n,int graph[NMAX][NMAX])
+void findEulerCycle(int n,int g[NMAX][NMAX])
 {
+    int graph[NMAX][NMAX];
+    int mockGraph[NMAX][NMAX];
+    for (int i = 1;i<=n;i++)
+        for (int j = 1;j<=n;j++)
+        {
+        graph[i][j]=g[i][j];
+        if (i!=j)
+        mockGraph[i][j]=inf;
+
+        }
     stack<int> p;
     p.push(1);
     int path[NMAX];
@@ -43,9 +131,48 @@ void findEulerCycle(int n,int graph[NMAX][NMAX])
         p.pop();
     }
     }
-    for (int i = 1;i<=k;i++)
-        printf("%d ",path[i]);
-    printf("\n");
+//    for (int i = 1;i<=k;i++)
+//        printf("%d ",path[i]);
+//    printf("\n");
+    //Ve
+    {
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
+    int centerX = getmaxx() / 2;
+    int centerY = getmaxy() / 2;
+    int radius = 200;
+    int angle = 360 / n;
+    // Draw nodes
+     setcolor(LIGHTCYAN);
+    for (int i = 1; i <= n; i++) {
+        int x = centerX + radius * cos(angle * i * 3.14 / 180);
+        int y = centerY + radius * sin(angle * i * 3.14 / 180);
+        drawBoldCircle(x, y, 15,5);
+
+        drawBoldText(x-5,y-5,toString(i),30);
+    }
+    setcolor(WHITE);
+     // Draw edges
+     for (int x = 1; x < k; x++)
+
+    {
+        delay(1000);
+        int i = path[x];
+        int j = path[x+1];
+        int startX = centerX + radius * cos(angle * i * 3.14 / 180);
+                int startY = centerY + radius * sin(angle * i * 3.14 / 180);
+                int endX = centerX + radius * cos(angle * j * 3.14 / 180);
+                int endY = centerY + radius * sin(angle * j * 3.14 / 180);
+
+                line(startX, startY, endX, endY);
+
+                int weightX = (startX + endX) / 2;
+                int weightY = (startY + endY) / 2;
+                char* weightString = toString(g[i][j]);
+                drawBoldText(weightX - 5, weightY - 5, weightString,30);
+        }
+
+    }
 }
 int count_connected_components(int n,int graph[NMAX][NMAX]) {
     int cnt = 0;
@@ -219,11 +346,13 @@ void print_path(int u,int path[NMAX])
     printf("%d - ",u);
 
 }
-void track(int u,int path[NMAX])
+void track(int u,int path[NMAX],int graph[NMAX][NMAX],int mockGraph[][NMAX])
 {
+    mockGraph[u][path[u]]=graph[u][path[u]];
+    mockGraph[path[u]][u]=graph[path[u]][u];
     if (u==-1) return;
-    track(path[u],path);
-    printf("%d ",u);
+    track(path[u],path,graph,mockGraph);
+    //printf("%d ",u);
 
 }
 
@@ -275,10 +404,16 @@ void dijkstra(int start,int destination,int n,int G[NMAX][NMAX],int path[]) {
     printf("Khong co duong di tu dinh %d den dinh %d",start,destination);
     else
     {
+    int mockGraph[NMAX][NMAX];
+    for (int i = 1;i<=n;i++)
+        for (int j = 1;j<=n;j++)
+        if (i!=j)
+        mockGraph[i][j]=inf;
     printf("Khoang cach ngan nhat tu dinh %d den dinh %d la: %d\n", start,destination, dist[destination]);
-    printf("duong di : \n");
+//    printf("duong di : \n");
     path[start] = -1;
-    track(destination,path);
+    track(destination,path,G,mockGraph);
+    drawGraph(n,mockGraph);
     }
     printf("\n");
 }
@@ -298,10 +433,25 @@ bool check_euler_graph(int n, int graph[NMAX][NMAX],int deg[])
 
 int printMST(int n,int parent[], int graph[NMAX][NMAX])
 {
-    printf("Edge \tWeight\n");
+    int mockGraph[NMAX][NMAX];
+    for (int i = 1;i<=n;i++)
+        for (int j = 1;j<=n;j++)
+        if (i!=j)
+        mockGraph[i][j]=inf;
     for (int i = 2; i <= n; i++)
-        printf("%d - %d \t%d \n", parent[i], i,
-               graph[i][parent[i]]);
+    {
+        mockGraph[parent[i]][i] = graph[i][parent[i]];
+        mockGraph[i][parent[i]] = graph[parent[i]][i];
+    }
+//    printfHandling(n,graph);
+    drawGraph(n, mockGraph);
+//    output(n,mockGraph);
+//    output(n,mockGraph);
+//        printf("%d - %d \t%d \n", parent[i], i,
+//               graph[i][parent[i]]);
+//    printfHandling(n,mockGraph);
+   // drawGraph(n,mockGraph);
+
 }
 int minKey(int n,int key[], bool mstSet[]) {
        int min = inf, min_index;
@@ -342,7 +492,6 @@ void primMST(int n,int graph[NMAX][NMAX]) {
      if (isEulerGraph==true){
         printf("Do thi tren co chu trinh Euler\n");
         findEulerCycle(n,graph);
-        printf("Nhap lai do thi ");
     }
 
      else printf("Do thi tren khong co chu trinh Euler\n");
@@ -369,10 +518,7 @@ void dijkstraHandling(int n,int graph[NMAX][NMAX],int path[NMAX])
 void primHandling(int n,int graph[NMAX][NMAX]){
     primMST(n,graph);
 }
-void printfHandling(int n,int graph[NMAX][NMAX])
-{
-    output(n,graph);
-}
+
 void functions(int n,int m,int graph[NMAX][NMAX],int deg[],int path[])
 {
     int opt = -1;
